@@ -15,7 +15,8 @@ jobs:
           java-version: 21
       - uses: gradle/actions/setup-gradle@v4
       - name: Build
-        run: ./gradlew assembleDebug --no-daemon
+        run: ./gradlew assembleLawnWithQuickstepGithubDebug --no-daemon -Pkotlin.daemon.jvmargs=-Xmx4g
+        
       - uses: actions/upload-artifact@v4
         with:
           name: apk
