@@ -1,3 +1,4 @@
+
 package app.lawnchair.icons
 
 import android.annotation.SuppressLint
@@ -18,7 +19,7 @@ import android.content.pm.ComponentInfo
 import android.content.pm.LauncherApps
 import android.content.pm.PackageItemInfo
 import android.content.res.Resources
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.AdaptiveIconDrawable 
 import android.os.Handler
 import android.os.UserHandle
 import android.os.UserManager
@@ -31,6 +32,7 @@ import app.lawnchair.icons.iconpack.IconPack
 import app.lawnchair.icons.iconpack.IconPackProvider
 import app.lawnchair.icons.picker.IconEntry
 import app.lawnchair.icons.picker.IconType
+import app.lawnchair.mono.MonoIconGenerator
 import app.lawnchair.preferences.PreferenceManager
 import app.lawnchair.util.MultiSafeCloseable
 import app.lawnchair.util.isPackageInstalled
@@ -159,7 +161,13 @@ class LawnchairIconProvider @Inject constructor(
         }
 
         val iconPackIcon = iconPackEntry?.let { iconPackProvider.getDrawable(it, iconDpi, user) }
-        val baseIcon = iconPackIcon ?: super.getIcon(info, appInfo, iconDpi)
+                val baseIcon = (iconPackIcon ?: super.getIcon(info, appInfo, iconDpi)).let { icon ->
+            if (themedIconsEnabled && iconPackIcon == null && icon is AdaptiveIconDrawable) {
+                MonoIconGenerator.withMonochrome(context.resources, icon) ?: icon
+            } else {
+                icon
+            }
+                } 
 
         if (!themedIconsEnabled || iconEntry == null) {
             return baseIcon
@@ -234,7 +242,7 @@ class LawnchairIconProvider @Inject constructor(
             "tip=${themedIconSourcePref.get()}," +
             "ti=${prefs.themedIcons.get()}," +
             "dti=${prefs.drawerThemedIcons.get()}," +
-            "fm=${prefs.forceIconMonochrome.get()}," +
+            "fm=${prefs.forceIconMonochrome.get()},mg=1," + 
             "ov=$overrideState"
     }
 
