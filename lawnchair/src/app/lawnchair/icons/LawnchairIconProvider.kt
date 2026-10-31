@@ -19,7 +19,9 @@ import android.content.pm.ComponentInfo
 import android.content.pm.LauncherApps
 import android.content.pm.PackageItemInfo
 import android.content.res.Resources
-import android.graphics.drawable.AdaptiveIconDrawable 
+import android.graphics.drawable.AdaptiveIconDrawable
+import android.graphics.drawable.Drawable
+import android.content.res.Resources
 import android.os.Handler
 import android.os.UserHandle
 import android.os.UserManager
